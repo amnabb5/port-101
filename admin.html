@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Gallery Admin · Amine Portfolio</title>
+<link rel="icon" href="./assets/images/bpdLXzyB3h60A5vcSJszih6hP0.png">
+<style>
+:root{--accent:#f94706;--accent-hover:#d13d05;--bg:#fff;--surface:#fafafa;--surface-2:#f2f2f2;--border:#e5e5e5;--text:#1a1a1a;--muted:#666;--danger:#dc2626;--danger-hover:#b91c1c;--success:#16a34a;--warning:#d97706;--radius:12px;--radius-sm:8px;--shadow:0 1px 3px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.04);--shadow-lg:0 4px 24px rgba(0,0,0,.08),0 12px 48px rgba(0,0,0,.12)}
+*{box-sizing:border-box}html,body{margin:0;padding:0}body{font-family:'Public Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--surface);color:var(--text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#fafafa 0%,#f2f2f2 100%)}
+.login-card{background:var(--bg);border-radius:var(--radius);box-shadow:var(--shadow-lg);padding:40px;max-width:420px;width:100%}
+.login-card h1{margin:0 0 8px;font-size:22px;font-weight:700;letter-spacing:-0.02em}
+.login-card p{margin:0 0 24px;color:var(--muted);font-size:13px}
+.login-card input{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s}
+.login-card input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(249,71,6,.12)}
+.login-card button{width:100%;margin-top:16px;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s}
+.login-card button:hover{background:var(--accent-hover)}
+.login-error{margin-top:12px;padding:10px 12px;background:#fef2f2;border:1px solid #fecaca;color:var(--danger);border-radius:var(--radius-sm);font-size:13px;display:none}
+.login-error.show{display:block}
+.login-hint{margin-top:20px;padding:12px;background:var(--surface-2);border-radius:var(--radius-sm);font-size:12px;color:var(--muted);line-height:1.5}
+.login-hint code{background:#fff;padding:1px 5px;border-radius:3px;font-family:'SF Mono',Monaco,monospace;font-size:11px;word-break:break-all}
+.app{display:none}.app.show{display:block}
+.topbar{background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.topbar-inner{max-width:1280px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.topbar-title{font-size:16px;font-weight:700;letter-spacing:-0.01em}
+.topbar-title .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--success);margin-right:8px;vertical-align:middle}
+.topbar-actions{display:flex;gap:8px;align-items:center}
+.topbar-actions a,.topbar-actions button{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:13px;font-weight:500;font-family:inherit;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg);color:var(--text);text-decoration:none;cursor:pointer;transition:all .15s}
+.topbar-actions a:hover,.topbar-actions button:hover{border-color:var(--text);background:var(--surface)}
+.topbar-actions button.danger{color:var(--danger);border-color:var(--border)}
+.topbar-actions button.danger:hover{background:#fef2f2;border-color:var(--danger)}
+.tabs{background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:60px;z-index:9}
+.tabs-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;gap:4px;overflow-x:auto}
+.tab{padding:14px 18px;font-size:13px;font-weight:600;font-family:inherit;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-badge{display:inline-block;margin-left:6px;padding:1px 7px;background:var(--surface-2);color:var(--muted);border-radius:10px;font-size:11px;font-weight:600}
+.tab.active .tab-badge{background:rgba(249,71,6,.12);color:var(--accent)}
+.content{max-width:1280px;margin:0 auto;padding:24px}
+.panel{display:none}.panel.show{display:block}
+.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+.card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.card-title{font-size:15px;font-weight:700;margin:0}
+.card-actions{display:flex;gap:8px;flex-wrap:wrap}
+.card-body{padding:20px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:13px;font-weight:600;font-family:inherit;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;text-decoration:none;transition:all .15s}
+.btn:hover{border-color:var(--text);background:var(--surface)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
+.btn-danger{color:var(--danger);border-color:var(--border)}
+.btn-danger:hover{background:#fef2f2;border-color:var(--danger)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.form-field{display:flex;flex-direction:column;gap:5px}
+.form-field.full{grid-column:1/-1}
+.form-field label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.form-field input,.form-field select,.form-field textarea{padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s;background:var(--bg);color:var(--text)}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(249,71,6,.1)}
+.form-field textarea{resize:vertical;min-height:70px}
+.form-field .hint{font-size:11px;color:var(--muted);line-height:1.4}
+.form-actions{margin-top:16px;display:flex;gap:8px;justify-content:flex-end}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{text-align:left;padding:10px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);background:var(--surface);border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--surface)}
+.thumb-cell{width:56px;height:40px;background:var(--surface-2);border-radius:4px;overflow:hidden;position:relative}
+.thumb-cell img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb-cell .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--muted)}
+.cell-actions{display:flex;gap:4px}
+.tag{display:inline-block;padding:2px 8px;background:var(--surface-2);color:var(--text);border-radius:10px;font-size:11px;font-weight:600}
+.tag.video{background:#fef3c7;color:#92400e}
+.tag.photo{background:#dbeafe;color:#1e40af}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.empty-icon{font-size:32px;margin-bottom:8px;opacity:.4}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:100;padding:24px}
+.modal-bg.show{display:flex}
+.modal{background:var(--bg);border-radius:var(--radius);box-shadow:var(--shadow-lg);max-width:640px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-header{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-size:16px;font-weight:700;margin:0}
+.modal-close{background:transparent;border:none;font-size:22px;cursor:pointer;color:var(--muted);padding:0;width:32px;height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:var(--surface);color:var(--text)}
+.modal-body{padding:24px}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+.alert{padding:12px 14px;border-radius:var(--radius-sm);font-size:13px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start}
+.alert-info{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
+.alert-warning{background:#fffbeb;border:1px solid #fde68a;color:#92400e}
+.alert-success{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
+.alert-danger{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+.log{background:#0f172a;color:#e2e8f0;padding:14px;border-radius:var(--radius-sm);font-family:'SF Mono',Monaco,Menlo,Consolas,monospace;font-size:12px;line-height:1.6;max-height:320px;overflow-y:auto;white-space:pre-wrap;word-break:break-all}
+.log .ok{color:#4ade80}.log .err{color:#f87171}.log .warn{color:#fbbf24}.log .info{color:#60a5fa}.log .muted{color:#94a3b8}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
+.stat-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.stat-value{font-size:22px;font-weight:700;margin-top:4px}
+.code-block{background:#0f172a;color:#e2e8f0;padding:14px;border-radius:var(--radius-sm);font-family:'SF Mono',Monaco,Menlo,Consolas,monospace;font-size:12px;line-height:1.5;overflow-x:auto;white-space:pre;max-height:400px}
+.help-text{font-size:13px;color:var(--muted);line-height:1.6}
+.help-text strong{color:var(--text)}
+.help-text code{background:var(--surface-2);padding:1px 5px;border-radius:3px;font-family:'SF Mono',Monaco,monospace;font-size:12px}
+.help-text ol,.help-text ul{padding-left:20px;margin:8px 0}
+.help-text li{margin:4px 0}
+.help-text a{color:var(--accent);text-decoration:none}
+.help-text a:hover{text-decoration:underline}
+.divider{height:1px;background:var(--border);margin:20px 0}
+@media (max-width:720px){.topbar-inner{padding:12px 16px}.tabs-inner{padding:0 16px}.content{padding:16px}.card-body{padding:16px}.modal-body{padding:16px}}
+</style>
+</head>
+<body>
+<div class="login-wrap" id="loginWrap">
+<div class="login-card">
+<h1>Gallery Admin</h1>
+<p>Enter your admin token to manage the gallery.</p>
+<form id="loginForm">
+<input type="password" id="loginToken" placeholder="Admin token" autocomplete="off" autofocus>
+<button type="submit">Unlock</button>
+<div class="login-error" id="loginError">Wrong token. Try again.</div>
+</form>
+<div class="login-hint">Tip: bookmark<br><code id="loginHintUrl"></code></div>
+</div>
+</div>
+<div class="app" id="app">
+<div class="topbar"><div class="topbar-inner">
+<div class="topbar-title"><span class="dot"></span>Gallery Admin</div>
+<div class="topbar-actions">
+<a href="./" target="_blank" rel="noopener">↗ View live site</a>
+<button id="lockBtn" class="danger">Lock</button>
+</div></div></div>
+<div class="tabs"><div class="tabs-inner">
+<button class="tab active" data-tab="items">Items <span class="tab-badge" id="itemsBadge">0</span></button>
+<button class="tab" data-tab="categories">Categories <span class="tab-badge" id="catsBadge">0</span></button>
+<button class="tab" data-tab="publish">Publish</button>
+<button class="tab" data-tab="backup">Backup &amp; Reset</button>
+</div></div></div>
+<div class="content">
+<div class="panel show" id="panel-items">
+<div class="stats-grid">
+<div class="stat"><div class="stat-label">Total items</div><div class="stat-value" id="statItems">0</div></div>
+<div class="stat"><div class="stat-label">Videos</div><div class="stat-value" id="statVideos">0</div></div>
+<div class="stat"><div class="stat-label">Photos</div><div class="stat-value" id="statPhotos">0</div></div>
+<div class="stat"><div class="stat-label">Categories</div><div class="stat-value" id="statCats">0</div></div>
+</div>
+<div class="card"><div class="card-header">
+<h2 class="card-title">Gallery items</h2>
+<div class="card-actions"><button class="btn btn-primary" id="addItemBtn">+ Add item</button></div>
+</div><div class="table-wrap" id="itemsTableWrap"></div></div>
+</div>
+<div class="panel" id="panel-categories">
+<div class="card"><div class="card-header">
+<h2 class="card-title">Categories</h2>
+<div class="card-actions"><button class="btn btn-primary" id="addCatBtn">+ Add category</button></div>
+</div><div class="table-wrap" id="catsTableWrap"></div></div>
+<div class="card"><div class="card-body">
+<p class="help-text">Categories are the filter tabs visitors see at the top of the gallery. The <code>all</code> category is built-in and cannot be deleted. Each item must reference one of these category IDs.</p>
+</div></div>
+</div>
+<div class="panel" id="panel-publish">
+<div class="card"><div class="card-header"><h2 class="card-title">Publish to GitHub</h2></div><div class="card-body">
+<div class="alert alert-info"><strong>How this works:</strong> Publishing writes a <code>gallery-config.json</code> file to your GitHub repo. The live site fetches this file (cache-busted) and uses it instead of the baked-in defaults. All visitors see your changes after a refresh.</div>
+<div class="form-grid">
+<div class="form-field full"><label for="ghPat">GitHub Personal Access Token (PAT)</label>
+<input type="password" id="ghPat" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+<div class="hint">Create one at <a href="https://github.com/settings/tokens/new?scopes=repo&description=Amine%20gallery%20admin" target="_blank" rel="noopener">github.com/settings/tokens</a> with the <code>repo</code> scope. Stored in your browser only (localStorage).</div></div>
+<div class="form-field"><label for="ghOwner">Repo owner</label><input type="text" id="ghOwner" value="amnabb5"></div>
+<div class="form-field"><label for="ghRepo">Repo name</label><input type="text" id="ghRepo" value="port-101"></div>
+<div class="form-field"><label for="ghBranch">Branch</label><input type="text" id="ghBranch" value="main"></div>
+<div class="form-field"><label for="ghPath">Config file path</label><input type="text" id="ghPath" value="assets/gallery/gallery-config.json"></div>
+<div class="form-field"><label for="ghCommitMsg">Commit message</label><input type="text" id="ghCommitMsg" value="Update gallery config from admin panel"></div>
+</div>
+<div class="form-actions">
+<button class="btn" id="testPatBtn">Test connection</button>
+<button class="btn btn-primary" id="publishBtn">Publish to GitHub</button>
+</div>
+<div class="divider"></div>
+<h3 style="margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);">Activity log</h3>
+<div class="log" id="publishLog"><span class="muted">// log is empty</span></div>
+</div></div>
+<div class="card"><div class="card-body">
+<h3 style="margin:0 0 12px;font-size:14px;">How visitors get your updates</h3>
+<ol class="help-text" style="padding-left:20px;">
+<li>You edit items/categories here → they save instantly to your browser (localStorage).</li>
+<li>You click <strong>Publish to GitHub</strong> → the config file is committed to your repo.</li>
+<li>Visitors load (or refresh) the live site → gallery.js fetches <code>gallery-config.json</code> with cache-busting and uses it.</li>
+<li>If the fetch 404s (e.g., you haven't published yet), the site falls back to the baked-in defaults — nothing breaks.</li>
+</ol>
+<p class="help-text" style="margin-top:12px;"><strong>Note:</strong> New media files (videos, images) still need to be uploaded to the repo separately (via GitHub web UI or git push). The admin panel only manages the <em>metadata</em> — title, category, file path, etc. — not the binary files themselves.</p>
+</div></div>
+</div>
+<div class="panel" id="panel-backup">
+<div class="card"><div class="card-header"><h2 class="card-title">Backup &amp; export</h2></div><div class="card-body">
+<p class="help-text">Your current config (items + categories) is stored in your browser's localStorage. Export it as a JSON file for backup, or to move it to another browser.</p>
+<div class="form-actions" style="justify-content:flex-start;">
+<button class="btn btn-primary" id="exportBtn">↓ Export config (JSON)</button>
+<button class="btn" id="importBtn">↑ Import config (JSON)</button>
+<input type="file" id="importFile" accept=".json,application/json" style="display:none;">
+</div></div></div>
+<div class="card"><div class="card-header"><h2 class="card-title">Current config (read-only)</h2></div><div class="card-body">
+<div class="code-block" id="configPreview">…</div>
+</div></div>
+<div class="card"><div class="card-header"><h2 class="card-title" style="color:var(--danger);">Danger zone</h2></div><div class="card-body">
+<p class="help-text">Reset clears your browser's localStorage and restores the original baked-in defaults. This cannot be undone. If you've already published to GitHub, the published file is NOT affected — you'd need to publish again to revert the live site.</p>
+<div class="form-actions" style="justify-content:flex-start;">
+<button class="btn btn-danger" id="resetBtn">Reset to defaults</button>
+</div></div></div>
+</div>
+</div></div>
+<div class="modal-bg" id="itemModalBg"><div class="modal">
+<div class="modal-header"><h3 class="modal-title" id="itemModalTitle">Add item</h3><button class="modal-close" id="itemModalClose">×</button></div>
+<div class="modal-body">
+<input type="hidden" id="item_id">
+<div class="form-grid">
+<div class="form-field full"><label for="item_title">Title *</label><input type="text" id="item_title" placeholder="Mercedes One"></div>
+<div class="form-field"><label for="item_cat">Category *</label><select id="item_cat"></select></div>
+<div class="form-field"><label for="item_type">Type *</label><select id="item_type"><option value="video">Video</option><option value="photo">Photo</option></select></div>
+<div class="form-field full"><label for="item_src">Media URL *</label><input type="text" id="item_src" placeholder="./assets/gallery/animation/mercedes-one.mp4"><div class="hint">Path to the video/photo file. Relative paths work; absolute URLs (https://…) also work.</div></div>
+<div class="form-field full"><label for="item_poster">Poster URL <span style="text-transform:none;color:var(--muted);font-weight:400;">(videos only)</span></label><input type="text" id="item_poster" placeholder="./assets/gallery/animation/mercedes-one-poster.webp"><div class="hint">Still image shown in the grid before the video plays. Required for videos.</div></div>
+<div class="form-field full"><label for="item_thumb">Thumbnail URL <span style="text-transform:none;color:var(--muted);font-weight:400;">(photos only)</span></label><input type="text" id="item_thumb" placeholder="./assets/gallery/environment/dragonball-thumb.webp"><div class="hint">Smaller image shown in the grid. Required for photos.</div></div>
+<div class="form-field"><label for="item_dur">Duration (seconds)</label><input type="number" id="item_dur" step="0.1" min="0" placeholder="16.4"><div class="hint">Videos only. Shown as a chip on the tile.</div></div>
+<div class="form-field"><label for="item_w">Width (px)</label><input type="number" id="item_w" min="1" placeholder="1280"></div>
+<div class="form-field"><label for="item_h">Height (px)</label><input type="number" id="item_h" min="1" placeholder="720"></div>
+<div class="form-field"><label for="item_tw">Thumb width (px)</label><input type="number" id="item_tw" min="1" placeholder="800"></div>
+<div class="form-field"><label for="item_th">Thumb height (px)</label><input type="number" id="item_th" min="1" placeholder="450"></div>
+</div></div>
+<div class="modal-footer"><button class="btn" id="itemModalCancel">Cancel</button><button class="btn btn-primary" id="itemModalSave">Save</button></div>
+</div></div>
+<div class="modal-bg" id="catModalBg"><div class="modal" style="max-width:480px;">
+<div class="modal-header"><h3 class="modal-title" id="catModalTitle">Add category</h3><button class="modal-close" id="catModalClose">×</button></div>
+<div class="modal-body">
+<input type="hidden" id="cat_orig_id">
+<div class="form-grid">
+<div class="form-field full"><label for="cat_id">ID *</label><input type="text" id="cat_id" placeholder="animation" style="font-family:'SF Mono',Monaco,monospace;"><div class="hint">URL-safe slug. Lowercase, no spaces. Used as the filter key. Cannot be changed after creation (delete + re-create instead).</div></div>
+<div class="form-field full"><label for="cat_label">Label *</label><input type="text" id="cat_label" placeholder="Animation"><div class="hint">Display text shown on the filter tab.</div></div>
+</div></div>
+<div class="modal-footer"><button class="btn" id="catModalCancel">Cancel</button><button class="btn btn-primary" id="catModalSave">Save</button></div>
+</div></div>
+<script>
+'use strict';
+var ADMIN_TOKEN = 'am1n3-adm1n-s3cr3t-tok3n-2026';
+var STORAGE_KEY = 'amine-gallery-config-v1';
+var SESSION_KEY = 'amine-admin-session';
+var DEFAULT_CATS = [{id:'all',label:'All'},{id:'animation',label:'Animation'},{id:'cgi',label:'CGI'},{id:'environment',label:'Environment'},{id:'products-ads',label:'Products Ads'}];
+var DEFAULT_MANIFEST = [{"id":"animation-mercedes-one","cat":"animation","title":"Mercedes One","src_name":"mercedes one.mov","dup_of":null,"type":"video","src":"./assets/gallery/animation/mercedes-one.mp4","poster":"./assets/gallery/animation/mercedes-one-poster.webp","w":1280,"h":720,"tw":800,"th":450,"dur":16.4},{"id":"cgi-post-insta","cat":"cgi","title":"Post Insta","src_name":"Post insta.mp4","dup_of":null,"type":"video","src":"./assets/gallery/cgi/post-insta.mp4","poster":"./assets/gallery/cgi/post-insta-poster.webp","w":1280,"h":720,"tw":800,"th":450,"dur":46.9},{"id":"environment-frames-0001-0196","cat":"environment","title":"Frames 0001-0196","src_name":"0001-0196.mp4","dup_of":null,"type":"video","src":"./assets/gallery/environment/frames-0001-0196.mp4","poster":"./assets/gallery/environment/frames-0001-0196-poster.webp","w":1080,"h":1080,"tw":800,"th":800,"dur":8.2},{"id":"environment-image-0001-copy","cat":"environment","title":"Image 0001","src_name":"Copy of Image0001.png","dup_of":null,"type":"photo","src":"./assets/gallery/environment/image-0001-copy.webp","thumb":"./assets/gallery/environment/image-0001-copy-thumb.webp","w":1600,"h":1200,"tw":800,"th":600},{"id":"environment-post-insta-copy","cat":"environment","title":"Post Insta","src_name":"Copy of Post insta.mp4","dup_of":"cgi/post-insta","type":"video","src":"./assets/gallery/cgi/post-insta.mp4","poster":"./assets/gallery/cgi/post-insta-poster.webp","w":1280,"h":720,"tw":800,"th":450,"dur":46.9},{"id":"environment-timeline-1","cat":"environment","title":"Timeline 1","src_name":"Timeline 1.mp4","dup_of":null,"type":"video","src":"./assets/gallery/environment/timeline-1.mp4","poster":"./assets/gallery/environment/timeline-1-poster.webp","w":1280,"h":720,"tw":800,"th":450,"dur":20.6},{"id":"environment-untitled-video","cat":"environment","title":"Untitled Video","src_name":"Untitled video - Made with Clipchamp (1).mp4","dup_of":null,"type":"video","src":"./assets/gallery/environment/untitled-video.mp4","poster":"./assets/gallery/environment/untitled-video-poster.webp","w":1280,"h":720,"tw":800,"th":450,"dur":17.1},{"id":"environment-dragonball","cat":"environment","title":"Dragonball","src_name":"dragonball1png.png","dup_of":null,"type":"photo","src":"./assets/gallery/environment/dragonball.webp","thumb":"./assets/gallery/environment/dragonball-thumb.webp","w":1600,"h":900,"tw":800,"th":450},{"id":"environment-final-0001-0953","cat":"environment","title":"Final 0001-0953","src_name":"final0001-0953.mov","dup_of":null,"type":"video","src":"./assets/gallery/environment/final-0001-0953.mp4","poster":"./assets/gallery/environment/final-0001-0953-poster.webp","w":1280,"h":720,"tw":800,"th":450,"dur":39.7},{"id":"environment-final-30001-0291","cat":"environment","title":"Final 30001-0291","src_name":"final30001-0291.mov","dup_of":null,"type":"video","src":"./assets/gallery/environment/final-30001-0291.mp4","poster":"./assets/gallery/environment/final-30001-0291-poster.webp","w":1280,"h":720,"tw":800,"th":450,"dur":12.1},{"id":"environment-mc-final","cat":"environment","title":"MC Final","src_name":"mc final.mp4","dup_of":null,"type":"video","src":"./assets/gallery/environment/mc-final.mp4","poster":"./assets/gallery/environment/mc-final-poster.webp","w":1280,"h":720,"tw":800,"th":450,"dur":18.0},{"id":"products-ads-image-0001","cat":"products-ads","title":"Image 0001","src_name":"Image0001.png","dup_of":"environment/image-0001-copy","type":"photo","src":"./assets/gallery/environment/image-0001-copy.webp","thumb":"./assets/gallery/environment/image-0001-copy-thumb.webp","w":1600,"h":1200,"tw":800,"th":600},{"id":"products-ads-bentbladi","cat":"products-ads","title":"Bentbladi","src_name":"bentbladi.mp4","dup_of":null,"type":"video","src":"./assets/gallery/products-ads/bentbladi.mp4","poster":"./assets/gallery/products-ads/bentbladi-poster.webp","w":1280,"h":720,"tw":800,"th":450,"dur":6.3},{"id":"products-ads-moment","cat":"products-ads","title":"Moment","src_name":"moment.mp4","dup_of":null,"type":"video","src":"./assets/gallery/products-ads/moment.mp4","poster":"./assets/gallery/products-ads/moment-poster.webp","w":720,"h":1280,"tw":800,"th":1422,"dur":32.4},{"id":"products-ads-moment-still","cat":"products-ads","title":"Moment","src_name":"moment.png","dup_of":null,"type":"photo","src":"./assets/gallery/products-ads/moment-still.webp","thumb":"./assets/gallery/products-ads/moment-still-thumb.webp","w":1600,"h":1600,"tw":800,"th":800},{"id":"products-ads-parfum","cat":"products-ads","title":"Parfum","src_name":"parfum.mp4","dup_of":null,"type":"video","src":"./assets/gallery/products-ads/parfum.mp4","poster":"./assets/gallery/products-ads/parfum-poster.webp","w":1280,"h":720,"tw":800,"th":450,"dur":23.4}];
+var state = {manifest:[],cats:[]};
+function loadConfig(){try{var raw=localStorage.getItem(STORAGE_KEY);if(raw){var p=JSON.parse(raw);if(p&&Array.isArray(p.manifest)&&Array.isArray(p.categories)){state.manifest=p.manifest;state.cats=p.categories;return;}}}catch(e){}state.manifest=DEFAULT_MANIFEST.slice();state.cats=DEFAULT_CATS.slice();}
+function saveConfig(){var d={manifest:state.manifest,categories:state.cats,updatedAt:new Date().toISOString()};localStorage.setItem(STORAGE_KEY,JSON.stringify(d,null,2));}
+function resetConfig(){localStorage.removeItem(STORAGE_KEY);loadConfig();}
+function isAuthed(){return sessionStorage.getItem(SESSION_KEY)==='1';}
+function setAuthed(v){if(v)sessionStorage.setItem(SESSION_KEY,'1');else sessionStorage.removeItem(SESSION_KEY);}
+function tryAutoLoginFromUrl(){var m=/(?:\?|&)token=([^&]+)/.exec(location.search);if(m){var t=decodeURIComponent(m[1]);if(t===ADMIN_TOKEN){setAuthed(true);history.replaceState(null,'',location.pathname+location.hash);return true;}}return false;}
+function $(id){return document.getElementById(id);}
+function el(tag,cls,html){var n=document.createElement(tag);if(cls)n.className=cls;if(html!=null)n.innerHTML=html;return n;}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+function showLogin(){$('loginWrap').style.display='flex';$('app').classList.remove('show');$('loginToken').value='';$('loginError').classList.remove('show');$('loginToken').focus();}
+function showApp(){$('loginWrap').style.display='none';$('app').classList.add('show');renderAll();}
+function renderStats(){var v=state.manifest.filter(function(i){return i.type==='video';}).length;var p=state.manifest.filter(function(i){return i.type==='photo';}).length;$('statItems').textContent=state.manifest.length;$('statVideos').textContent=v;$('statPhotos').textContent=p;$('statCats').textContent=state.cats.length;$('itemsBadge').textContent=state.manifest.length;$('catsBadge').textContent=state.cats.length;}
+function renderItemsTable(){var wrap=$('itemsTableWrap');if(!state.manifest.length){wrap.innerHTML='<div class="empty"><div class="empty-icon">○</div>No items yet. Click <strong>Add item</strong> to create one.</div>';return;}var html='<table><thead><tr><th style="width:60px;">Thumb</th><th>Title</th><th>Category</th><th>Type</th><th>Duration</th><th>Src</th><th style="text-align:right;">Actions</th></tr></thead><tbody>';state.manifest.forEach(function(it){var img=it.type==='video'?(it.poster||''):(it.thumb||'');var imgHtml=img?'<img src="'+esc(img)+'" alt="" loading="lazy" onerror="this.style.display=\'none\';this.parentNode.innerHTML=\'—\';">':'—';var cl='--';state.cats.forEach(function(c){if(c.id===it.cat)cl=c.label;});html+='<tr><td><div class="thumb-cell">'+imgHtml+'</div></td><td><strong>'+esc(it.title)+'</strong><br><span style="font-size:11px;color:var(--muted);">'+esc(it.id)+'</span></td><td>'+esc(cl)+' <code style="color:var(--muted);font-size:11px;">'+esc(it.cat)+'</code></td><td><span class="tag '+it.type+'">'+it.type+'</span></td><td>'+(it.dur!=null?it.dur+'s':'—')+'</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="'+esc(it.src)+'"><code style="font-size:11px;">'+esc(it.src)+'</code></td><td style="text-align:right;"><div class="cell-actions" style="justify-content:flex-end;"><button class="btn btn-sm" data-edit="'+esc(it.id)+'">Edit</button><button class="btn btn-sm btn-danger" data-del="'+esc(it.id)+'">Delete</button></div></td></tr>';});html+='</tbody></table>';wrap.innerHTML=html;wrap.querySelectorAll('[data-edit]').forEach(function(b){b.addEventListener('click',function(){openItemModal(b.getAttribute('data-edit'));});});wrap.querySelectorAll('[data-del]').forEach(function(b){b.addEventListener('click',function(){deleteItem(b.getAttribute('data-del'));});});}
+function renderCatsTable(){var wrap=$('catsTableWrap');var counts={};state.manifest.forEach(function(i){counts[i.cat]=(counts[i.cat]||0)+1;});if(!state.cats.length){wrap.innerHTML='<div class="empty"><div class="empty-icon">○</div>No categories yet.</div>';return;}var html='<table><thead><tr><th>ID</th><th>Label</th><th>Items</th><th style="text-align:right;">Actions</th></tr></thead><tbody>';state.cats.forEach(function(c){var isAll=c.id==='all';html+='<tr><td><code>'+esc(c.id)+'</code></td><td><strong>'+esc(c.label)+'</strong></td><td>'+(counts[c.id]||0)+'</td><td style="text-align:right;"><div class="cell-actions" style="justify-content:flex-end;">'+(isAll?'<span style="font-size:11px;color:var(--muted);">built-in</span>':'<button class="btn btn-sm" data-edit-cat="'+esc(c.id)+'">Edit</button><button class="btn btn-sm btn-danger" data-del-cat="'+esc(c.id)+'">Delete</button>')+'</div></td></tr>';});html+='</tbody></table>';wrap.innerHTML=html;wrap.querySelectorAll('[data-edit-cat]').forEach(function(b){b.addEventListener('click',function(){openCatModal(b.getAttribute('data-edit-cat'));});});wrap.querySelectorAll('[data-del-cat]').forEach(function(b){b.addEventListener('click',function(){deleteCat(b.getAttribute('data-del-cat'));});});}
+function renderConfigPreview(){$('configPreview').textContent=JSON.stringify({manifest:state.manifest,categories:state.cats,updatedAt:new Date().toISOString()},null,2);}
+function renderAll(){renderStats();renderItemsTable();renderCatsTable();renderConfigPreview();}
+function openItemModal(id){var isEdit=!!id;$('itemModalTitle').textContent=isEdit?'Edit item':'Add item';var sel=$('item_cat');sel.innerHTML='';state.cats.forEach(function(c){if(c.id==='all')return;var o=el('option');o.value=c.id;o.textContent=c.label+' ('+c.id+')';sel.appendChild(o);});if(isEdit){var it=state.manifest.find(function(i){return i.id===id;});if(!it)return;$('item_id').value=it.id;$('item_title').value=it.title||'';$('item_cat').value=it.cat||'';$('item_type').value=it.type||'video';$('item_src').value=it.src||'';$('item_poster').value=it.poster||'';$('item_thumb').value=it.thumb||'';$('item_dur').value=it.dur!=null?it.dur:'';$('item_w').value=it.w||'';$('item_h').value=it.h||'';$('item_tw').value=it.tw||'';$('item_th').value=it.th||'';}else{$('item_id').value='';$('item_title').value='';$('item_cat').value=sel.firstChild?sel.firstChild.value:'';$('item_type').value='video';$('item_src').value='';$('item_poster').value='';$('item_thumb').value='';$('item_dur').value='';$('item_w').value='1280';$('item_h').value='720';$('item_tw').value='800';$('item_th').value='450';}$('itemModalBg').classList.add('show');setTimeout(function(){$('item_title').focus();},50);}
+function closeItemModal(){$('itemModalBg').classList.remove('show');}
+function slugify(s){return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,80);}
+function saveItem(){var title=$('item_title').value.trim();var cat=$('item_cat').value;var type=$('item_type').value;var src=$('item_src').value.trim();if(!title){alert('Title is required.');return;}if(!cat){alert('Category is required.');return;}if(!src){alert('Media URL is required.');return;}if(type==='video'&&!$('item_poster').value.trim()){alert('Poster URL is required for videos.');return;}if(type==='photo'&&!$('item_thumb').value.trim()){alert('Thumbnail URL is required for photos.');return;}var id=$('item_id').value;if(!id){var base=slugify(title)+'-'+slugify(cat);id=base;var n=2;while(state.manifest.some(function(i){return i.id===id;})){id=base+'-'+n;n++;}}var item={id:id,cat:cat,title:title,src_name:src.split('/').pop()||title,dup_of:null,type:type,src:src,w:parseInt($('item_w').value,10)||1280,h:parseInt($('item_h').value,10)||720,tw:parseInt($('item_tw').value,10)||800,th:parseInt($('item_th').value,10)||450};if(type==='video'){item.poster=$('item_poster').value.trim();var dur=parseFloat($('item_dur').value);if(!isNaN(dur))item.dur=dur;}else{item.thumb=$('item_thumb').value.trim();}if($('item_id').value){var idx=state.manifest.findIndex(function(i){return i.id===id;});if(idx>=0)state.manifest[idx]=item;}else{state.manifest.push(item);}saveConfig();renderAll();closeItemModal();}
+function deleteItem(id){var it=state.manifest.find(function(i){return i.id===id;});if(!it)return;if(!confirm('Delete "'+it.title+'"?\nThis removes it from the gallery. The media file on disk is NOT affected.'))return;state.manifest=state.manifest.filter(function(i){return i.id!==id;});saveConfig();renderAll();}
+function openCatModal(id){var isEdit=!!id;$('catModalTitle').textContent=isEdit?'Edit category':'Add category';if(isEdit){var c=state.cats.find(function(x){return x.id===id;});if(!c)return;$('cat_orig_id').value=c.id;$('cat_id').value=c.id;$('cat_id').disabled=true;$('cat_label').value=c.label;}else{$('cat_orig_id').value='';$('cat_id').value='';$('cat_id').disabled=false;$('cat_label').value='';}$('catModalBg').classList.add('show');setTimeout(function(){$('cat_id').focus();},50);}
+function closeCatModal(){$('catModalBg').classList.remove('show');}
+function saveCat(){var id=$('cat_id').value.trim();var label=$('cat_label').value.trim();if(!id||!label){alert('Both ID and label are required.');return;}if(!/^[a-z0-9-]+$/.test(id)){alert('ID must be lowercase, no spaces. Only letters, numbers, and hyphens.');return;}if(id==='all'){alert('The ID "all" is reserved.');return;}var orig=$('cat_orig_id').value;if(orig){var idx=state.cats.findIndex(function(c){return c.id===orig;});if(idx>=0)state.cats[idx].label=label;}else{if(state.cats.some(function(c){return c.id===id;})){alert('A category with ID "'+id+'" already exists.');return;}state.cats.push({id:id,label:label});}saveConfig();renderAll();closeCatModal();}
+function deleteCat(id){var c=state.cats.find(function(x){return x.id===id;});if(!c)return;var count=state.manifest.filter(function(i){return i.cat===id;}).length;var msg='Delete category "'+c.label+'"?';if(count>0){msg+='\n\n'+count+' item(s) use this category. They will remain but show as "uncategorized". You should reassign them first.';}if(!confirm(msg))return;state.cats=state.cats.filter(function(x){return x.id!==id;});saveConfig();renderAll();}
+function activateTab(name){document.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('active',t.getAttribute('data-tab')===name);});document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('show',p.id==='panel-'+name);});}
+function exportConfig(){var d={manifest:state.manifest,categories:state.cats,exportedAt:new Date().toISOString(),schema:1};var b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});var u=URL.createObjectURL(b);var a=el('a');a.href=u;a.download='gallery-config-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}
+function importConfig(file){var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);if(!d||!Array.isArray(d.manifest)||!Array.isArray(d.categories)){alert('Invalid config file. Expected { manifest: [...], categories: [...]}');return;}if(!confirm('Import '+d.manifest.length+' items and '+d.categories.length+' categories?\nThis replaces your current config.'))return;state.manifest=d.manifest;state.cats=d.categories;saveConfig();renderAll();alert('Imported successfully.');}catch(e){alert('Failed to parse JSON: '+e.message);}};r.readAsText(file);}
+function resetToDefaults(){if(!confirm('Reset to defaults?\n\nThis clears your browser\'s saved config and restores the original 16-item gallery. This cannot be undone.'))return;resetConfig();renderAll();alert('Reset complete. The original config is restored in your browser.\n\nTo revert the LIVE site, you also need to publish again (or delete the gallery-config.json file from the repo).');}
+function logMsg(msg,kind){var log=$('publishLog');var s=el('span');s.className=kind||'muted';var ts=new Date().toLocaleTimeString();s.textContent='['+ts+'] '+msg+'\n';if(log.querySelector('.muted:only-child'))log.innerHTML='';log.appendChild(s);log.scrollTop=log.scrollHeight;}
+function getGhSettings(){return{pat:$('ghPat').value.trim(),owner:$('ghOwner').value.trim()||'amnabb5',repo:$('ghRepo').value.trim()||'port-101',branch:$('ghBranch').value.trim()||'main',path:$('ghPath').value.trim()||'assets/gallery/gallery-config.json',msg:$('ghCommitMsg').value.trim()||'Update gallery config from admin panel'};}
+function saveGhSettings(){var s=getGhSettings();localStorage.setItem('amine-admin-gh',JSON.stringify({owner:s.owner,repo:s.repo,branch:s.branch,path:s.path,msg:s.msg,pat:s.pat}));}
+function loadGhSettings(){try{var r=localStorage.getItem('amine-admin-gh');if(!r)return;var s=JSON.parse(r);if(s.owner)$('ghOwner').value=s.owner;if(s.repo)$('ghRepo').value=s.repo;if(s.branch)$('ghBranch').value=s.branch;if(s.path)$('ghPath').value=s.path;if(s.msg)$('ghCommitMsg').value=s.msg;if(s.pat)$('ghPat').value=s.pat;}catch(e){}}
+async function testPat(){var s=getGhSettings();if(!s.pat){alert('Enter your GitHub PAT first.');return;}logMsg('Testing connection to '+s.owner+'/'+s.repo+' …','info');try{var r=await fetch('https://api.github.com/repos/'+s.owner+'/'+s.repo,{headers:{'Authorization':'Bearer '+s.pat,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}});if(r.status===200){var d=await r.json();logMsg('✓ Connected. Repo: '+d.full_name+' (default branch: '+d.default_branch+')','ok');}else if(r.status===401){logMsg('✗ Unauthorized — PAT is invalid or expired.','err');}else if(r.status===404){logMsg('✗ Repo not found — check owner/repo name. (Or PAT lacks access.)','err');}else{logMsg('✗ Unexpected status '+r.status,'err');}}catch(e){logMsg('✗ Network error: '+e.message,'err');}saveGhSettings();}
+async function publishToGitHub(){var s=getGhSettings();if(!s.pat){alert('Enter your GitHub PAT first.');return;}saveGhSettings();var btn=$('publishBtn');btn.disabled=true;btn.textContent='Publishing…';logMsg('Preparing config JSON…','info');var cfg={manifest:state.manifest,categories:state.cats,publishedAt:new Date().toISOString(),schema:1};var content=JSON.stringify(cfg,null,2);var b64=btoa(unescape(encodeURIComponent(content)));logMsg('Config size: '+(content.length/1024).toFixed(1)+' KB','muted');var apiUrl='https://api.github.com/repos/'+s.owner+'/'+s.repo+'/contents/'+encodeURIComponent(s.path);var headers={'Authorization':'Bearer '+s.pat,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};logMsg('Checking if '+s.path+' already exists…','info');var sha=null;try{var gr=await fetch(apiUrl+'?ref='+encodeURIComponent(s.branch),{headers:headers});if(gr.status===200){var gd=await gr.json();sha=gd.sha;logMsg('File exists (sha='+sha.slice(0,8)+'…) — will update.','muted');}else if(gr.status===404){logMsg('File does not exist — will create new.','muted');}else{var et=await gr.text();logMsg('✗ Unexpected status '+gr.status+' checking file: '+et.slice(0,200),'err');btn.disabled=false;btn.textContent='Publish to GitHub';return;}}catch(e){logMsg('✗ Network error: '+e.message,'err');btn.disabled=false;btn.textContent='Publish to GitHub';return;}logMsg('Publishing to '+s.owner+'/'+s.repo+':'+s.branch+' …','info');var body={message:s.msg,content:b64,branch:s.branch,committer:{name:'Amine Admin',email:'amine@portfolio.local'}};if(sha)body.sha=sha;try{var pr=await fetch(apiUrl,{method:'PUT',headers:headers,body:JSON.stringify(body)});var pd=await pr.json();if(pr.status===200||pr.status===201){var cs=pd.commit&&pd.commit.sha?pd.commit.sha.slice(0,8):'unknown';logMsg('✓ Published! Commit '+cs+' — '+(pd.commit&&pd.commit.html_url||''),'ok');logMsg('Live site will pick up changes after GitHub Pages/CDN cache expires (usually <1 min).','info');}else{logMsg('✗ Publish failed (status '+pr.status+'): '+(pd.message||'unknown error'),'err');if(pd.errors)pd.errors.forEach(function(e){logMsg('  • '+(e.field||'?')+': '+(e.code||e.message||''),'err');});}}catch(e){logMsg('✗ Network error during PUT: '+e.message,'err');}btn.disabled=false;btn.textContent='Publish to GitHub';}
+function init(){$('loginHintUrl').textContent=location.origin+location.pathname+'?token='+ADMIN_TOKEN;if(tryAutoLoginFromUrl()){loadConfig();showApp();return;}if(isAuthed()){loadConfig();showApp();return;}showLogin();$('loginForm').addEventListener('submit',function(e){e.preventDefault();var t=$('loginToken').value;if(t===ADMIN_TOKEN){setAuthed(true);loadConfig();showApp();}else{$('loginError').classList.add('show');$('loginToken').value='';$('loginToken').focus();}});$('lockBtn').addEventListener('click',function(){setAuthed(false);showLogin();});document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){activateTab(t.getAttribute('data-tab'));});});$('addItemBtn').addEventListener('click',function(){openItemModal(null);});$('itemModalClose').addEventListener('click',closeItemModal);$('itemModalCancel').addEventListener('click',closeItemModal);$('itemModalSave').addEventListener('click',saveItem);$('itemModalBg').addEventListener('click',function(e){if(e.target===$('itemModalBg'))closeItemModal();});$('addCatBtn').addEventListener('click',function(){openCatModal(null);});$('catModalClose').addEventListener('click',closeCatModal);$('catModalCancel').addEventListener('click',closeCatModal);$('catModalSave').addEventListener('click',saveCat);$('catModalBg').addEventListener('click',function(e){if(e.target===$('catModalBg'))closeCatModal();});loadGhSettings();$('testPatBtn').addEventListener('click',testPat);$('publishBtn').addEventListener('click',publishToGitHub);$('exportBtn').addEventListener('click',exportConfig);$('importBtn').addEventListener('click',function(){$('importFile').click();});$('importFile').addEventListener('change',function(e){if(e.target.files[0])importConfig(e.target.files[0]);e.target.value='';});$('resetBtn').addEventListener('click',resetToDefaults);document.addEventListener('keydown',function(e){if(e.key==='Escape'){if($('itemModalBg').classList.contains('show'))closeItemModal();if($('catModalBg').classList.contains('show'))closeCatModal();}});}
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
