@@ -51,10 +51,10 @@ USAGE
 
 After pushing, the admin panel is at:
 
-    https://<your-site>/admin.html  (protected by Render Web Service authentication)
+    https://<your-site>/admin.html?token=am1n3-adm1n-s3cr3t-tok3n-2026
 
 (Change the token in admin.html before deploying — search for
-the Render `ADMIN_USER` and `ADMIN_PASSWORD` environment variables.)
+ADMIN_TOKEN in that file.)
 
 IDEMPOTENT — re-running on an already-patched repo is a no-op.
 """
@@ -476,7 +476,7 @@ def main() -> int:
         return 1
 
     print("=" * 70)
-    print("Creating admin.html (server-authenticated admin panel)")
+    print("Creating admin.html (token-gated admin panel)")
     print("=" * 70)
     existing_admin = ADMIN_HTML.read_text(encoding="utf-8") if ADMIN_HTML.exists() else None
     if existing_admin == ADMIN_HTML_CONTENT:
@@ -487,9 +487,10 @@ def main() -> int:
     print(f"  Size: {len(ADMIN_HTML_CONTENT)} chars")
     print()
     print("Admin URL (after deploying):")
-    print(f"  https://<your-site>/admin.html")
+    print(f"  https://<your-site>/admin.html?token=am1n3-adm1n-s3cr3t-tok3n-2026")
     print()
-    print("  Set ADMIN_USER and ADMIN_PASSWORD in Render before deploying.")
+    print("⚠️  Change the ADMIN_TOKEN in admin.html before deploying!")
+    print("    Search for: var ADMIN_TOKEN = ")
 
     print()
     print("=" * 70)
@@ -507,7 +508,7 @@ Files created/modified:
   assets/gallery/gallery.js        ← PATCHED (fetches gallery-config.json)
 
 How it works:
-  1. Visit /admin.html and enter the Render Web Service credentials.
+  1. Visit /admin.html?token=am1n3-adm1n-s3cr3t-tok3n-2026
   2. Add/edit/delete gallery items and categories (saved to localStorage)
   3. (Optional) Publish to GitHub via the Publish tab — writes
      assets/gallery/gallery-config.json to your repo

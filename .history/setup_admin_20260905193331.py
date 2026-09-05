@@ -51,10 +51,10 @@ USAGE
 
 After pushing, the admin panel is at:
 
-    https://<your-site>/admin.html  (protected by Render Web Service authentication)
+    https://<your-site>/admin.html?token=am1n3-adm1n-s3cr3t-tok3n-2026
 
 (Change the token in admin.html before deploying — search for
-the Render `ADMIN_USER` and `ADMIN_PASSWORD` environment variables.)
+ADMIN_TOKEN in that file.)
 
 IDEMPOTENT — re-running on an already-patched repo is a no-op.
 """
@@ -319,7 +319,7 @@ tbody tr:hover{background:var(--surface)}
 </div></div>
 <script>
 'use strict';
-var ADMIN_TOKEN = '';
+var ADMIN_TOKEN = 'am1n3-adm1n-s3cr3t-tok3n-2026';
 var STORAGE_KEY = 'amine-gallery-config-v1';
 var SESSION_KEY = 'amine-admin-session';
 var DEFAULT_CATS = [{id:'all',label:'All'},{id:'animation',label:'Animation'},{id:'cgi',label:'CGI'},{id:'environment',label:'Environment'},{id:'products-ads',label:'Products Ads'}];
@@ -361,9 +361,7 @@ function loadGhSettings(){try{var r=localStorage.getItem('amine-admin-gh');if(!r
 async function testPat(){var s=getGhSettings();if(!s.pat){alert('Enter your GitHub PAT first.');return;}logMsg('Testing connection to '+s.owner+'/'+s.repo+' …','info');try{var r=await fetch('https://api.github.com/repos/'+s.owner+'/'+s.repo,{headers:{'Authorization':'Bearer '+s.pat,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}});if(r.status===200){var d=await r.json();logMsg('✓ Connected. Repo: '+d.full_name+' (default branch: '+d.default_branch+')','ok');}else if(r.status===401){logMsg('✗ Unauthorized — PAT is invalid or expired.','err');}else if(r.status===404){logMsg('✗ Repo not found — check owner/repo name. (Or PAT lacks access.)','err');}else{logMsg('✗ Unexpected status '+r.status,'err');}}catch(e){logMsg('✗ Network error: '+e.message,'err');}saveGhSettings();}
 async function publishToGitHub(){var s=getGhSettings();if(!s.pat){alert('Enter your GitHub PAT first.');return;}saveGhSettings();var btn=$('publishBtn');btn.disabled=true;btn.textContent='Publishing…';logMsg('Preparing config JSON…','info');var cfg={manifest:state.manifest,categories:state.cats,publishedAt:new Date().toISOString(),schema:1};var content=JSON.stringify(cfg,null,2);var b64=btoa(unescape(encodeURIComponent(content)));logMsg('Config size: '+(content.length/1024).toFixed(1)+' KB','muted');var apiUrl='https://api.github.com/repos/'+s.owner+'/'+s.repo+'/contents/'+encodeURIComponent(s.path);var headers={'Authorization':'Bearer '+s.pat,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};logMsg('Checking if '+s.path+' already exists…','info');var sha=null;try{var gr=await fetch(apiUrl+'?ref='+encodeURIComponent(s.branch),{headers:headers});if(gr.status===200){var gd=await gr.json();sha=gd.sha;logMsg('File exists (sha='+sha.slice(0,8)+'…) — will update.','muted');}else if(gr.status===404){logMsg('File does not exist — will create new.','muted');}else{var et=await gr.text();logMsg('✗ Unexpected status '+gr.status+' checking file: '+et.slice(0,200),'err');btn.disabled=false;btn.textContent='Publish to GitHub';return;}}catch(e){logMsg('✗ Network error: '+e.message,'err');btn.disabled=false;btn.textContent='Publish to GitHub';return;}logMsg('Publishing to '+s.owner+'/'+s.repo+':'+s.branch+' …','info');var body={message:s.msg,content:b64,branch:s.branch,committer:{name:'Amine Admin',email:'amine@portfolio.local'}};if(sha)body.sha=sha;try{var pr=await fetch(apiUrl,{method:'PUT',headers:headers,body:JSON.stringify(body)});var pd=await pr.json();if(pr.status===200||pr.status===201){var cs=pd.commit&&pd.commit.sha?pd.commit.sha.slice(0,8):'unknown';logMsg('✓ Published! Commit '+cs+' — '+(pd.commit&&pd.commit.html_url||''),'ok');logMsg('Live site will pick up changes after GitHub Pages/CDN cache expires (usually <1 min).','info');}else{logMsg('✗ Publish failed (status '+pr.status+'): '+(pd.message||'unknown error'),'err');if(pd.errors)pd.errors.forEach(function(e){logMsg('  • '+(e.field||'?')+': '+(e.code||e.message||''),'err');});}}catch(e){logMsg('✗ Network error during PUT: '+e.message,'err');}btn.disabled=false;btn.textContent='Publish to GitHub';}
 function init(){$('loginHintUrl').textContent=location.origin+location.pathname+'?token='+ADMIN_TOKEN;if(tryAutoLoginFromUrl()){loadConfig();showApp();return;}if(isAuthed()){loadConfig();showApp();return;}showLogin();$('loginForm').addEventListener('submit',function(e){e.preventDefault();var t=$('loginToken').value;if(t===ADMIN_TOKEN){setAuthed(true);loadConfig();showApp();}else{$('loginError').classList.add('show');$('loginToken').value='';$('loginToken').focus();}});$('lockBtn').addEventListener('click',function(){setAuthed(false);showLogin();});document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){activateTab(t.getAttribute('data-tab'));});});$('addItemBtn').addEventListener('click',function(){openItemModal(null);});$('itemModalClose').addEventListener('click',closeItemModal);$('itemModalCancel').addEventListener('click',closeItemModal);$('itemModalSave').addEventListener('click',saveItem);$('itemModalBg').addEventListener('click',function(e){if(e.target===$('itemModalBg'))closeItemModal();});$('addCatBtn').addEventListener('click',function(){openCatModal(null);});$('catModalClose').addEventListener('click',closeCatModal);$('catModalCancel').addEventListener('click',closeCatModal);$('catModalSave').addEventListener('click',saveCat);$('catModalBg').addEventListener('click',function(e){if(e.target===$('catModalBg'))closeCatModal();});loadGhSettings();$('testPatBtn').addEventListener('click',testPat);$('publishBtn').addEventListener('click',publishToGitHub);$('exportBtn').addEventListener('click',exportConfig);$('importBtn').addEventListener('click',function(){$('importFile').click();});$('importFile').addEventListener('change',function(e){if(e.target.files[0])importConfig(e.target.files[0]);e.target.value='';});$('resetBtn').addEventListener('click',resetToDefaults);document.addEventListener('keydown',function(e){if(e.key==='Escape'){if($('itemModalBg').classList.contains('show'))closeItemModal();if($('catModalBg').classList.contains('show'))closeCatModal();}});}
-function bindServerAuthenticatedControls(){if(window.__adminControlsBound||!$('app').classList.contains('show'))return;window.__adminControlsBound=true;$('lockBtn').addEventListener('click',function(){setAuthed(false);showLogin();});document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){activateTab(t.getAttribute('data-tab'));});});$('addItemBtn').addEventListener('click',function(){openItemModal(null);});$('itemModalClose').addEventListener('click',closeItemModal);$('itemModalCancel').addEventListener('click',closeItemModal);$('itemModalSave').addEventListener('click',saveItem);$('itemModalBg').addEventListener('click',function(e){if(e.target===$('itemModalBg'))closeItemModal();});$('addCatBtn').addEventListener('click',function(){openCatModal(null);});$('catModalClose').addEventListener('click',closeCatModal);$('catModalCancel').addEventListener('click',closeCatModal);$('catModalSave').addEventListener('click',saveCat);$('catModalBg').addEventListener('click',function(e){if(e.target===$('catModalBg'))closeCatModal();});loadGhSettings();$('testPatBtn').addEventListener('click',testPat);$('publishBtn').addEventListener('click',publishToGitHub);$('exportBtn').addEventListener('click',exportConfig);$('importBtn').addEventListener('click',function(){$('importFile').click();});$('importFile').addEventListener('change',function(e){if(e.target.files[0])importConfig(e.target.files[0]);e.target.value='';});$('resetBtn').addEventListener('click',resetToDefaults);}
-sessionStorage.setItem(SESSION_KEY,'1');
-document.addEventListener('DOMContentLoaded',function(){init();bindServerAuthenticatedControls();});
+document.addEventListener('DOMContentLoaded',init);
 </script>
 </body>
 </html>
@@ -476,7 +474,7 @@ def main() -> int:
         return 1
 
     print("=" * 70)
-    print("Creating admin.html (server-authenticated admin panel)")
+    print("Creating admin.html (token-gated admin panel)")
     print("=" * 70)
     existing_admin = ADMIN_HTML.read_text(encoding="utf-8") if ADMIN_HTML.exists() else None
     if existing_admin == ADMIN_HTML_CONTENT:
@@ -487,9 +485,10 @@ def main() -> int:
     print(f"  Size: {len(ADMIN_HTML_CONTENT)} chars")
     print()
     print("Admin URL (after deploying):")
-    print(f"  https://<your-site>/admin.html")
+    print(f"  https://<your-site>/admin.html?token=am1n3-adm1n-s3cr3t-tok3n-2026")
     print()
-    print("  Set ADMIN_USER and ADMIN_PASSWORD in Render before deploying.")
+    print("⚠️  Change the ADMIN_TOKEN in admin.html before deploying!")
+    print("    Search for: var ADMIN_TOKEN = ")
 
     print()
     print("=" * 70)
@@ -507,7 +506,7 @@ Files created/modified:
   assets/gallery/gallery.js        ← PATCHED (fetches gallery-config.json)
 
 How it works:
-  1. Visit /admin.html and enter the Render Web Service credentials.
+  1. Visit /admin.html?token=am1n3-adm1n-s3cr3t-tok3n-2026
   2. Add/edit/delete gallery items and categories (saved to localStorage)
   3. (Optional) Publish to GitHub via the Publish tab — writes
      assets/gallery/gallery-config.json to your repo
