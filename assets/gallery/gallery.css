@@ -105,6 +105,16 @@
 .gp-grid.is-switching { opacity: 0; }
 @media (max-width: 809.98px) {
   .gp-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  /* Perf: backdrop blur on tiny chips over static thumbnails is one of the
+     most expensive mobile paint ops (5-10ms per tile per frame); the 92%
+     white chip background alone reads identically. */
+  .gp-chip {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    padding: 5px 8px;
+    font-size: 9px;
+  }
+  .gp-play { width: 44px; height: 44px; margin: -22px 0 0 -22px; }
 }
 @media (max-width: 479.98px) {
   .gp-root { padding: 28px 16px 8px; }
@@ -232,11 +242,23 @@
   inset: 0;
   z-index: 99999;
   display: none;
-  background: rgba(0, 0, 0, 0.88);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  /* Perf fix (mobile ~5fps video): NEVER use backdrop-filter here.
+     The full-viewport blur() over the animated page (Spline 3D WebGL scene,
+     Framer motion, the blurred fixed nav) forces the GPU to re-blur the whole
+     screen for EVERY video frame. A more opaque backdrop looks identical
+     (the blur sat under 88% black anyway) and costs nothing. */
+  background: rgba(0, 0, 0, 0.94);
 }
 .gp-lightbox.is-open { display: block; }
+
+/* While the lightbox is open, drop every heavy background layer. All of it is
+   covered by the 94%-opaque overlay, so visibility:hidden changes nothing
+   visually but frees the GPU/compositor completely for smooth video. */
+body.gp-lb-open canvas { visibility: hidden !important; }          /* Spline 3D scene */
+body.gp-lb-open nav,
+body.gp-lb-open header { visibility: hidden !important; }          /* blurred fixed nav */
+body.gp-lb-open .gp-root { visibility: hidden !important; }        /* gallery grid */
+body.gp-lb-open #overlay { visibility: hidden !important; }
 .gp-lb-stage {
   position: absolute;
   inset: 0;
@@ -326,6 +348,9 @@
 @media (max-width: 809.98px) {
   .gp-lb-stage { padding: 76px 16px 132px; }
   .gp-lb-media img, .gp-lb-media video { max-height: calc(100vh - 208px); }
+  /* Perf fix (mobile): skip the one-time scale-in animation so the video
+     layer starts composited immediately (no re-composite during first frames). */
+  .gp-lb-media { animation: none; }
   .gp-lb-prev, .gp-lb-next {
     top: auto;
     bottom: 84px;

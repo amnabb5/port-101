@@ -222,11 +222,6 @@
     state.lastFocus = document.activeElement;
     var lb = document.querySelector('.gp-lightbox');
     lb.classList.add('is-open');
-    /* Perf: mark the body so heavy background layers (Spline 3D canvas,
-       blurred fixed nav, gallery grid) are hidden via gallery.css while
-       the video plays. All of them sit behind the 94%-opaque overlay,
-       so this is invisible — it just frees the GPU for smooth playback. */
-    document.body.classList.add('gp-lb-open');
     var sbw = window.innerWidth - document.documentElement.clientWidth;
     document.documentElement.style.overflow = 'hidden';
     if (sbw > 0) document.body.style.paddingRight = sbw + 'px';
@@ -245,12 +240,6 @@
       v.autoplay = true;
       v.loop = true;
       v.playsInline = true;
-      /* Mobile Safari (older iOS) + X5/TBS Android webviews need the
-         attributes, not just the property, for inline playback. */
-      v.setAttribute('playsinline', '');
-      v.setAttribute('webkit-playsinline', '');
-      v.setAttribute('x5-playsinline', 'true');
-      try { v.disableRemotePlayback = true; } catch (e) {}
       v.preload = 'metadata';
       v.poster = it.poster;
       v.src = it.src;          /* full video loads ONLY now */
@@ -290,7 +279,6 @@
     if (v) { v.pause(); v.removeAttribute('src'); v.load(); }
     lb.querySelector('.gp-lb-media').innerHTML = '';
     lb.classList.remove('is-open');
-    document.body.classList.remove('gp-lb-open');
     document.documentElement.style.overflow = '';
     document.body.style.paddingRight = '';
     if (state.lastFocus && state.lastFocus.focus) state.lastFocus.focus();
@@ -366,7 +354,6 @@
       existing.remove();
       var lb = document.querySelector('.gp-lightbox');
       if (lb) lb.remove();
-      document.body.classList.remove('gp-lb-open');
       state.built = false;
       state.cat = 'all';
       state.list = [];
