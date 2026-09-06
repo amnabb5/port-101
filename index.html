@@ -625,15 +625,37 @@ window.addEventListener('load', function () {
     if (tries > 50) clearInterval(bindTimer);
   }, 200);
 
-  // Long-term watcher: keeps the title in sync even after late hydration /
-  // variant swaps. Throttled to every 400ms; cheap (just a text compare).
-  var longTimer = setInterval(function () {
-    rebindAndApply();
-  }, 400);
+  // Long-term watcher: instead of a never-ending 400ms setInterval
+  // (which drains battery on mobile and causes the main thread to wake
+  // up 2.5x per second forever), use a MutationObserver that fires ONLY
+  // when the sticky card's DOM actually changes (Framer hydration /
+  // variant swap). This is essentially free between mutations.
+  var moTarget = document.querySelector('.framer-i9etg6') || document.body;
+  var mo = new MutationObserver(function (mutations) {
+    // Only re-apply if a child changed (text or subtree), not attribute-only
+    for (var k = 0; k < mutations.length; k++) {
+      if (mutations[k].type === 'childList' || mutations[k].type === 'characterData') {
+        rebindAndApply();
+        return;
+      }
+    }
+  });
+  mo.observe(moTarget, { childList: true, subtree: true, characterData: true });
 
-  // Scroll + resize listeners (real-time updates).
-  window.addEventListener('scroll', apply, { passive: true });
-  window.addEventListener('resize', apply);
+  // Scroll + resize listeners (real-time updates, rAF-throttled).
+  // Without rAF, the scroll handler fires dozens of times per second
+  // on mobile, each one walking the DOM and reading layout. rAF
+  // coalesces these into one call per frame (max ~60 per second).
+  function onScroll() {
+    if (state.rafPending) return;
+    state.rafPending = true;
+    (window.requestAnimationFrame || function (cb) { setTimeout(cb, 16); })(function () {
+      state.rafPending = false;
+      apply();
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
 });
 </script>
 </body>
