@@ -440,6 +440,15 @@
         download.click();
         download.remove();
       }, true);
+      document.addEventListener('click', function (event) {
+        var contact = event.target.closest && event.target.closest('a');
+        if (!contact || contact.textContent.toLowerCase().indexOf('contact now') === -1) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        var popup = window.open('./contact.html', 'AmineContact', 'width=440,height=700,menubar=no,toolbar=no,location=no,status=no,resizable=yes');
+        if (popup) popup.focus();
+        else window.open('./contact.html', '_blank', 'noopener');
+      }, true);
       var attempts = 0;
       var timer = setInterval(function () {
         var project = document.getElementById('projects-1');
